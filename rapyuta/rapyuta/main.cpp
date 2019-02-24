@@ -7,9 +7,30 @@
 //
 
 #include <iostream>
+#include <fstream>
+
+#include "mirrors_grid.hpp"
+
+using namespace std;
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    
+    ifstream in("input.txt");
+    cin.rdbuf(in.rdbuf()); //redirect
+    int r, c, m, n;
+    cin >> r >> c >> m >> n;
+    
+    int tmp_x = -1, tmp_y= -1;
+    for (int iter = 0; iter < m; iter++)
+    {
+        cin >> tmp_x >> tmp_y;
+    }
+    
+    for (int iter = 0; iter < n; iter++)
+    {
+        cin >> tmp_x >> tmp_y;
+    }
+    
+    
     return 0;
 }

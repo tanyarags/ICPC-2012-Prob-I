@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B09678522231D350052139C /* mirrors_grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B09678322231D350052139C /* mirrors_grid.cpp */; };
+		2B096788222328A10052139C /* maze.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B096786222328A10052139C /* maze.cpp */; };
 		2BC7231522230B6900D17816 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC7231422230B6900D17816 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2B09678322231D350052139C /* mirrors_grid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mirrors_grid.cpp; sourceTree = "<group>"; };
+		2B09678422231D350052139C /* mirrors_grid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mirrors_grid.hpp; sourceTree = "<group>"; };
+		2B096786222328A10052139C /* maze.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = maze.cpp; sourceTree = "<group>"; };
+		2B096787222328A10052139C /* maze.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = maze.hpp; sourceTree = "<group>"; };
 		2BC7231122230B6900D17816 /* rapyuta */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rapyuta; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC7231422230B6900D17816 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +64,10 @@
 			isa = PBXGroup;
 			children = (
 				2BC7231422230B6900D17816 /* main.cpp */,
+				2B09678322231D350052139C /* mirrors_grid.cpp */,
+				2B09678422231D350052139C /* mirrors_grid.hpp */,
+				2B096786222328A10052139C /* maze.cpp */,
+				2B096787222328A10052139C /* maze.hpp */,
 			);
 			path = rapyuta;
 			sourceTree = "<group>";
@@ -118,7 +128,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B09678522231D350052139C /* mirrors_grid.cpp in Sources */,
 				2BC7231522230B6900D17816 /* main.cpp in Sources */,
+				2B096788222328A10052139C /* maze.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
