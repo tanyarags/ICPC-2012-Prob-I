@@ -9,13 +9,25 @@
 #include "maze.hpp"
 
 bool Maze::add_mirror(int type, int x, int y){
-   //create a mirror
-    Mirror* m = new Mirror(type,x,y);
+    int key_x = x;
+    int key_y = y;
     
+    //create a mirror
+    Mirror* m = new Mirror(type,x,y);//new mirror
     
-    //add mirror to row and column trees
-    SideNode* side_row = row_tree->insert(m);
-    SideNode* side_col = col_tree->insert(m);
+    //add wall node
+    WallNode* node_x = row_tree->search(key_x);
+    if (node_x == nullptr){
+        //wall node doesnt exist, add new
+        node_x = new WallNode(key_x, 0, x, y);
+        node_x = row_tree->insert(key_x, node_x);
+    }
+    else{
+       // if node_x
+    }
+    
+    WallNode* node_y = new WallNode(key_y, 0, x, y);
+    node_y = row_tree->insert(key_y, node_y);
     
     
     
