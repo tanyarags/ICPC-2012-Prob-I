@@ -11,26 +11,43 @@
 
 #include <stdio.h>
 #include "avl_tree.cpp"
-struct PathNode{
-    int x1, x2;
-    int y1, y2;
-    PathNode* next;
+
+struct LineSegment{
+    int x1, x2, y1, y2;
+    LineSegment(int x1, int y1, int x2, int y2): x1(x1), y1(y1), x2(x2), y2(y2){};
+    void print(){
+        cout<< "\nPoint1 (" << x1 << "," << y1 << ") Point2 (" << x2 << ","<<y2 << ")";
+    }
+};
+
+struct PathNode: public LineSegment{
+    int key;
+    int balance;
     
-    PathNode(): next(nullptr){}
-    PathNode(int x1, int y1, int x2, int y2): x1(x1), x2(x2), y1(y1), y2(y2), next(nullptr){}
-    ~PathNode(){ delete next;}
+    PathNode *left, *right, *parent;
+    
+    PathNode(int k, int x1, int y1, int x2, int y2, PathNode* p): LineSegment(x1, y1, x2, y2), key(k), balance(0), parent(p),
+    left(nullptr), right(nullptr){};
+    
+    ~PathNode() {
+        delete left;
+        delete right;
+    }
 };
 
 struct Path{
-    PathNode* hor_root;
-    PathNode* ver_root;
+    AVLTree<PathNode> *hor_root;
+    AVLTree<PathNode> *ver_root;
     int len_hor, len_ver;
     
-    Path():hor_root(nullptr), ver_root(nullptr), len_hor(0), len_ver(0){};
+    Path():hor_root(nullptr), ver_root(nullptr), len_hor(0), len_ver(0){
+        hor_root = new AVLTree<PathNode>();
+        ver_root = new AVLTree<PathNode>();
+    };
     
     bool push(int x1, int y1, int x2, int y2);
-    bool _push(PathNode* node, PathNode* root);
     void print_path();
+    void print_tree(PathNode* node);
     
 };
 
@@ -42,8 +59,6 @@ struct WallPoint: public Base{
     }
     bool add_neighbor(Base* neighbor){
         closest_mirror = neighbor;
-        cout << "Closest Mirror added for " << x << " " << y;
-        cout << "Closest mirror at " << neighbor->x << " " << neighbor->y;
         return true;
     }
 };
@@ -56,46 +71,8 @@ struct Mirror: public Base{
             directions[iter] = nullptr;
     }
     
-    bool add_neighbor(Base* neighbor){
-        int direction = get_direction(neighbor);
-        
-        if (direction != -1){
-            // changed to curr new node
-            if( neighbor->type ==0) //Wall point
-                directions[direction] = ((WallPoint*)neighbor)->closest_mirror;
-            
-            else
-                directions[direction] = ((Mirror*)neighbor)->directions[direction];
-            
-            directions[(direction+2)%4] = neighbor; //curr node points to neighbor.
-            
-            //changed for neighbor
-            if( neighbor->type ==0){//Wall point
-                ((WallPoint*)neighbor)->closest_mirror = (Base*)this;
-                cout << "\nClosest Mirror updated " << ((WallPoint*)neighbor)->x << " " << ((WallPoint*)neighbor)->y;
-            }
-            else{
-                ((Mirror*)neighbor)->directions[direction] = (Base*)this;
-                cout << "\nMirror neighbor updated " << ((Mirror*)neighbor)->x << " " << ((Mirror*)neighbor)->y;
-            }
-        }
-        return true;
-    }
-    
-    int get_direction(Base* node){
-        int ref_x = node->x, ref_y = node->y;
-        
-        // 0, 1, 2, 3: north, east south, west
-        int direction = -1;
-        
-        if (ref_x == x)
-            direction = y < ref_y? 0: 2 ;//north, south
-        
-        if(ref_y == y)
-            direction = x < ref_x? 3: 1 ;//west, east
-        
-        return direction;
-    }
+    bool add_neighbor(Base* neighbor);
+    int get_direction(Base* node);
 };
 
 struct MirrorNode: public AVLNode{

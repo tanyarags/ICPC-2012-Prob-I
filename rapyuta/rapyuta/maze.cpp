@@ -8,58 +8,80 @@
 
 #include "maze.hpp"
 
+///Path Functions//
 bool Path::push(int x1, int y1, int x2, int y2){
-    PathNode* node = new PathNode(x1,y1,x2,y2);
-    if (x1 == x2){ //horizonal
-        if (len_hor == 0) hor_root = node;
-        else _push(node, hor_root);
+    if (y1 == y2){ //horizonal
+        int key = y1;
+        PathNode* node = new PathNode(key, x1, y1, x2, y2, nullptr);
+        hor_root->insert(key, node);
         len_hor = len_hor + 1;
     }
     
-    if (y1 == y2){ //vertical
-        if (len_ver == 0) ver_root = node;
-        else _push(node, ver_root);
+    if (x1 == x2){ //vertical
+        int key = x1;
+        PathNode* node = new PathNode(key, x1, y1, x2, y2, nullptr);
+        ver_root->insert(key, node);
         len_ver = len_ver + 1;
     }
     return true;
 }
-
-bool Path::_push(PathNode* node, PathNode* root){
-    
-    if (root == nullptr){
-        root = node;
-        return true;
+void Path::print_tree(PathNode* node ){
+    if (node != nullptr) {
+        print_tree(node->left);
+        node->print();
+        print_tree(node->right);
     }
-    
-    int weight = root->x1 + root->y1;
-    int node_weight = node->x1 + node->y1;
-    
-    if(weight > node_weight){
-        PathNode *ptr = root;
-        root = node;
-        root->next = ptr;
-    }
-    else
-        _push(node, root->next);
-    
-    return true;
 }
 
 void Path::print_path(){
-    PathNode *node = hor_root;
-    while(node != nullptr){
-        cout<<node->x1<<" "<<node->y1<<" "<<node->x2<<" "<<node->y2<<" ";
-        node = node->next;
-    }
-    node = ver_root;
-    while(node != nullptr){
-        cout<<node->x1<<" "<<node->y1<<" "<<node->x2<<" "<<node->y2<<" ";
-        node = node->next;
-    }
+    print_tree(hor_root->root);
+    print_tree(ver_root->root);
+}
+
+///Mirror functions////
+bool Mirror::add_neighbor(Base* neighbor){
+    int direction = get_direction(neighbor);
     
+    if (direction != -1){
+        // changed to curr new node
+        if( neighbor->type ==0) //Wall point
+            directions[direction] = ((WallPoint*)neighbor)->closest_mirror;
+        
+        else
+            directions[direction] = ((Mirror*)neighbor)->directions[direction];
+        
+        directions[(direction+2)%4] = neighbor; //curr node points to neighbor.
+        
+        //changed for neighbor
+        if( neighbor->type ==0){//Wall point
+            ((WallPoint*)neighbor)->closest_mirror = (Base*)this;
+            cout << "\nClosest Mirror updated " << ((WallPoint*)neighbor)->x << " " << ((WallPoint*)neighbor)->y;
+        }
+        else{
+            ((Mirror*)neighbor)->directions[direction] = (Base*)this;
+            cout << "\nMirror neighbor updated " << ((Mirror*)neighbor)->x << " " << ((Mirror*)neighbor)->y;
+        }
+    }
+    return true;
+}
+
+int Mirror::get_direction(Base* node){
+    int ref_x = node->x, ref_y = node->y;
+    
+    // 0, 1, 2, 3: north, east south, west
+    int direction = -1;
+    
+    if (ref_x == x)
+        direction = y < ref_y? 0: 2 ;//north, south
+    
+    if(ref_y == y)
+        direction = x < ref_x? 3: 1 ;//west, east
+    
+    return direction;
 }
 
 
+///Maze functions///
 bool Maze::add_mirror(int type, int x, int y){
     int key_x = x;
     int key_y = y;
@@ -70,11 +92,6 @@ bool Maze::add_mirror(int type, int x, int y){
     
     WallNode *w_node_x = get_wall_node(row_tree, x, 0);
     WallNode *w_node_y = get_wall_node(col_tree, 0, y);
-    
-//    cout << "column Tree";
-//    //col_tree->printPoints();
-//    cout << "Row Tree";
-//    //row_tree->printPoints();
     
     AVLTree<MirrorNode> *m_tree_x = get_mirror_tree(w_node_x);
     AVLTree<MirrorNode> *m_tree_y = get_mirror_tree(w_node_y);
@@ -134,8 +151,6 @@ WallNode* Maze::get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y){
 }
 
 AVLTree<MirrorNode>* Maze::get_mirror_tree(WallNode* w_node){
-    //int x= m->x, y = m->y, type = m->type;
-    //get mirror tree pointer for this mirror (from wallNode)
     AVLTree<MirrorNode>* mirror_tree = w_node->mirror_tree;
     if (mirror_tree == nullptr) {//no mirrors exist, add current
         mirror_tree = new AVLTree<MirrorNode>();
