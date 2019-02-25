@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "mirrors_grid.hpp"
+#include "maze.hpp"
 
 using namespace std;
 

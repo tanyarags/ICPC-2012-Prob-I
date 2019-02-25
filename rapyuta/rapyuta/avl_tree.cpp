@@ -35,6 +35,76 @@ T* AVLTree<T>::search(int key, T *start_node){
 }
 
 template <class T>
+T* AVLTree<T>::search_less(int key, T *start_node){
+    
+    if (root == nullptr)
+        return nullptr;
+    else{
+        if (start_node == nullptr)
+            start_node = root;
+        
+        if (start_node->key < key){
+            //return right most node
+            while (true) {
+                if ((T*)start_node->right != nullptr)
+                    start_node = (T*)start_node->right;
+                
+                else break;
+            }
+            return start_node;
+        }
+        
+        else{
+            T *n = start_node;
+            
+            bool goLeft = n->key > key;
+            n = goLeft ? (T*)n->left : (T*)n->right;
+            
+            if (n == nullptr)
+                return nullptr;
+            
+            else
+                return search_less(key, n);
+        }
+    }
+}
+
+template <class T>
+T* AVLTree<T>::search_more(int key, T *start_node){
+    
+    if (root == nullptr)
+        return nullptr;
+    else{
+        if (start_node == nullptr)
+            start_node = root;
+        
+        if (start_node->key > key){
+            //return leftmost most node
+            while (true) {
+                if ((T*)start_node->left != nullptr)
+                    start_node = (T*)start_node->left;
+                
+                else break;
+            }
+            return start_node;
+        }
+        
+        else{
+            T *n = start_node;
+            
+            bool goLeft = n->key > key;
+            n = goLeft ? (T*)n->left : (T*)n->right;
+            
+            if (n == nullptr)
+                return nullptr;
+            
+            else
+                return search_more(key, n);
+        }
+    }
+}
+
+template <class T>
 void AVLTree<T>::rebalance(T *n) {
     setBalance(n);
     
