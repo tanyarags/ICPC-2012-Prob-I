@@ -264,3 +264,18 @@ void AVLTree<T>::printBalance() {
     printBalance(root);
     std::cout << std::endl;
 }
+
+template <class T>
+void AVLTree<T>::printPoints() {
+    printPoints(root);
+    std::cout << std::endl;
+}
+
+template <class T>
+void AVLTree<T>::printPoints(T *n) {
+    if (n != nullptr) {
+        printPoints(n->left);
+        std::cout << n->x << " " << n->y << "\n";
+        printBalance(n->right);
+    }
+}

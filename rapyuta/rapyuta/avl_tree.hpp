@@ -45,6 +45,7 @@ struct AVLTree {
     T* search_less(int key, T *start_node = nullptr);
     T* search_more(int key, T *start_node = nullptr);
     void printBalance();
+    void printPoints();
     
     T* rotateLeft          ( T *a );
     T* rotateRight         ( T *a );
@@ -54,6 +55,7 @@ struct AVLTree {
     int height                      ( T *n );
     void setBalance                 ( T *n );
     void printBalance               ( T *n );
+    void printPoints                ( T * n);
     void clearNode                  ( T *n );
 };
 

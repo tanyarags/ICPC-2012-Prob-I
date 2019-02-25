@@ -11,6 +11,28 @@
 
 #include <stdio.h>
 #include "avl_tree.cpp"
+struct PathNode{
+    int x1, x2;
+    int y1, y2;
+    PathNode* next;
+    
+    PathNode(): next(nullptr){}
+    PathNode(int x1, int y1, int x2, int y2): x1(x1), x2(x2), y1(y1), y2(y2), next(nullptr){}
+    ~PathNode(){ delete next;}
+};
+
+struct Path{
+    PathNode* hor_root;
+    PathNode* ver_root;
+    int len_hor, len_ver;
+    
+    Path():hor_root(nullptr), ver_root(nullptr), len_hor(0), len_ver(0){}
+    
+    bool push(int x1, int y1, int x2, int y2);
+    bool _push(PathNode* node, PathNode* root);
+    void print_path();
+    
+};
 
 struct WallPoint: public Base{
     Base *closest_mirror;
@@ -96,16 +118,36 @@ struct WallNode: public AVLNode{
 struct Maze {
     AVLTree<WallNode> *row_tree;
     AVLTree<WallNode> *col_tree;
+    int rows;
+    int cols;
+    Base* start_node;
+    Base* end_node;
     
+    Maze(int row, int col) : row_tree(nullptr),col_tree(nullptr),
+    rows(row),cols(col), start_node(nullptr), end_node(nullptr){
+        row_tree = new AVLTree<WallNode>();
+        col_tree = new AVLTree<WallNode>();
+    };
     
-    
-    Maze() : row_tree(nullptr),col_tree(nullptr){};
+    void init(){
+        start_node = (Base*)(get_wall_node(col_tree, 0, 1 ));
+        end_node = (Base*)(get_wall_node(col_tree, cols +1, rows));
+    }
     
     bool add_mirror(int type, int x, int y);
     WallNode* get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y);
     AVLTree<MirrorNode>* get_mirror_tree(WallNode* w_node);
     bool make_connections(Mirror* m, int key, int key_c, WallNode* w_node, AVLTree<MirrorNode>* m_tree);
-    //MirrorNode* get_mirror_node(Mirror *m, WallNode* w_node, int key, int key_c);
+    Path* traverse(Base* node, int direction);
+    Base* next_node(Base* node, int direction);
+    int emerging_direction(Base* node, int in_direction);
     
+    Path* traverse_start(){
+        return traverse(start_node, 1);
+    }
+    
+    Path* traverse_end(){
+        return traverse(end_node, 3);
+    }
 };
 #endif /* maze_hpp */
