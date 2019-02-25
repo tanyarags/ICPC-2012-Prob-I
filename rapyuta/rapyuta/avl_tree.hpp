@@ -55,7 +55,7 @@ struct AVLTree {
     int height                      ( T *n );
     void setBalance                 ( T *n );
     void printBalance               ( T *n );
-    void printPoints                ( T * n);
+    void printPoints                ( T *n );
     void clearNode                  ( T *n );
 };
 

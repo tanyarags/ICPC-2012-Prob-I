@@ -26,7 +26,7 @@ struct Path{
     PathNode* ver_root;
     int len_hor, len_ver;
     
-    Path():hor_root(nullptr), ver_root(nullptr), len_hor(0), len_ver(0){}
+    Path():hor_root(nullptr), ver_root(nullptr), len_hor(0), len_ver(0){};
     
     bool push(int x1, int y1, int x2, int y2);
     bool _push(PathNode* node, PathNode* root);
@@ -42,6 +42,8 @@ struct WallPoint: public Base{
     }
     bool add_neighbor(Base* neighbor){
         closest_mirror = neighbor;
+        cout << "Closest Mirror added for " << x << " " << y;
+        cout << "Closest mirror at " << neighbor->x << " " << neighbor->y;
         return true;
     }
 };
@@ -68,10 +70,14 @@ struct Mirror: public Base{
             directions[(direction+2)%4] = neighbor; //curr node points to neighbor.
             
             //changed for neighbor
-            if( neighbor->type ==0) //Wall point
+            if( neighbor->type ==0){//Wall point
                 ((WallPoint*)neighbor)->closest_mirror = (Base*)this;
-            else
+                cout << "\nClosest Mirror updated " << ((WallPoint*)neighbor)->x << " " << ((WallPoint*)neighbor)->y;
+            }
+            else{
                 ((Mirror*)neighbor)->directions[direction] = (Base*)this;
+                cout << "\nMirror neighbor updated " << ((Mirror*)neighbor)->x << " " << ((Mirror*)neighbor)->y;
+            }
         }
         return true;
     }
@@ -120,8 +126,9 @@ struct Maze {
     AVLTree<WallNode> *col_tree;
     int rows;
     int cols;
-    Base* start_node;
-    Base* end_node;
+    WallNode* start_node;
+    WallNode* end_node;
+    bool added_last_row = false;
     
     Maze(int row, int col) : row_tree(nullptr),col_tree(nullptr),
     rows(row),cols(col), start_node(nullptr), end_node(nullptr){
@@ -130,8 +137,8 @@ struct Maze {
     };
     
     void init(){
-        start_node = (Base*)(get_wall_node(col_tree, 0, 1 ));
-        end_node = (Base*)(get_wall_node(col_tree, cols +1, rows));
+        start_node = get_wall_node(col_tree, 0, 1 );
+        end_node = new WallNode(cols + 1 + rows, 0, cols +1, rows);
     }
     
     bool add_mirror(int type, int x, int y);
@@ -141,13 +148,14 @@ struct Maze {
     Path* traverse(Base* node, int direction);
     Base* next_node(Base* node, int direction);
     int emerging_direction(Base* node, int in_direction);
+    bool make_connection_last_layer(Mirror* m, int key, int key_c, WallNode* w_node);
     
     Path* traverse_start(){
-        return traverse(start_node, 1);
+        return traverse((Base*)(start_node->wallpoint), 1);
     }
     
     Path* traverse_end(){
-        return traverse(end_node, 3);
+        return traverse((Base*)(end_node->wallpoint), 3);
     }
 };
 #endif /* maze_hpp */

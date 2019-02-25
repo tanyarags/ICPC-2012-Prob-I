@@ -276,6 +276,6 @@ void AVLTree<T>::printPoints(T *n) {
     if (n != nullptr) {
         printPoints(n->left);
         std::cout << n->x << " " << n->y << "\n";
-        printBalance(n->right);
+        printPoints(n->right);
     }
 }

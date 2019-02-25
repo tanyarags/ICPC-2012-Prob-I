@@ -11,12 +11,14 @@
 bool Path::push(int x1, int y1, int x2, int y2){
     PathNode* node = new PathNode(x1,y1,x2,y2);
     if (x1 == x2){ //horizonal
-        _push(node, hor_root);
+        if (len_hor == 0) hor_root = node;
+        else _push(node, hor_root);
         len_hor = len_hor + 1;
     }
     
     if (y1 == y2){ //vertical
-        _push(node, ver_root);
+        if (len_ver == 0) ver_root = node;
+        else _push(node, ver_root);
         len_ver = len_ver + 1;
     }
     return true;
@@ -24,8 +26,10 @@ bool Path::push(int x1, int y1, int x2, int y2){
 
 bool Path::_push(PathNode* node, PathNode* root){
     
-    if (root == nullptr)
+    if (root == nullptr){
         root = node;
+        return true;
+    }
     
     int weight = root->x1 + root->y1;
     int node_weight = node->x1 + node->y1;
@@ -60,17 +64,29 @@ bool Maze::add_mirror(int type, int x, int y){
     int key_x = x;
     int key_y = y;
     
+    cout << "\nMaking connections for " << x << " " <<y;
     //create a mirror
     Mirror* m = new Mirror(type,x,y);//new mirror
     
     WallNode *w_node_x = get_wall_node(row_tree, x, 0);
     WallNode *w_node_y = get_wall_node(col_tree, 0, y);
     
+//    cout << "column Tree";
+//    //col_tree->printPoints();
+//    cout << "Row Tree";
+//    //row_tree->printPoints();
+    
     AVLTree<MirrorNode> *m_tree_x = get_mirror_tree(w_node_x);
     AVLTree<MirrorNode> *m_tree_y = get_mirror_tree(w_node_y);
     
     make_connections(m, key_x, key_y, w_node_x, m_tree_x);
     make_connections(m, key_y, key_x, w_node_y, m_tree_y);
+    
+    //special case. when mirror is in last row.
+    if (m->y == rows and added_last_row == false){
+        m->add_neighbor((Base*)(end_node->wallpoint));
+        added_last_row = true;
+    }
     
     return true;
 }
@@ -109,6 +125,10 @@ WallNode* Maze::get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y){
         w_node = new WallNode(key, 0, x, y);
         w_node = wall_tree->insert(key, w_node);
     }
+    
+    cout << "\nFetched Wall " << ((Base*)w_node)->x << " " << ((Base*)w_node)->y;
+    //cout << "Current wall tree\n";
+    //wall_tree->printPoints();
 
     return w_node;
 }
@@ -143,12 +163,12 @@ int Maze::emerging_direction(Base* node, int in_direction){
     }
     
     else if(type == -1){//case '/'
-        int map[4] = {3, 2, 1, 0};
+        int map[4] = {1,0, 3, 2};
         return_dir = map[in_direction];
     }
     
     else if (type == 1){//case '\'
-        int map[4] = {1, 0, 3, 2};
+        int map[4] = {3, 2, 1, 0};
         return_dir = map[in_direction];
     }
     
@@ -183,9 +203,9 @@ Path* Maze::traverse(Base* node, int direction){
             switch (direction) {
                 case 0: y2 = 0;
                     break;
-                case 1: x2 = cols;
+                case 1: x2 = cols + 1;
                     break;
-                case 2: y2 = rows;
+                case 2: y2 = rows + 1;
                     break;
                 case 3: x2 = 0;
                     break;
@@ -198,9 +218,10 @@ Path* Maze::traverse(Base* node, int direction){
             x2 = node->x;
             y2 = node->y;
         }
-        path->push(x1, y1, x1, y2);
+        cout<< "Line Segment from (" <<x1 << "," << y1<< ") ("<<x2 << "," << y2 << ")";
+        
+        path->push(x1, y1, x2, y2);
     }
     
     return path;
 }
-
