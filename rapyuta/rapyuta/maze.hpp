@@ -36,13 +36,20 @@ struct Mirror: public Base{
         int direction = get_direction(neighbor);
         
         if (direction != -1){
+            // changed to curr new node
             if( neighbor->type ==0) //Wall point
                 directions[direction] = ((WallPoint*)neighbor)->closest_mirror;
             
             else
                 directions[direction] = ((Mirror*)neighbor)->directions[direction];
             
-            directions[(direction-2)%4] = neighbor;
+            directions[(direction+2)%4] = neighbor; //curr node points to neighbor.
+            
+            //changed for neighbor
+            if( neighbor->type ==0) //Wall point
+                ((WallPoint*)neighbor)->closest_mirror = (Base*)this;
+            else
+                ((Mirror*)neighbor)->directions[direction] = (Base*)this;
         }
         return true;
     }
@@ -67,7 +74,7 @@ struct MirrorNode: public AVLNode{
     Mirror *mirror;
     
     MirrorNode(int key, int type, int x, int y, Mirror *mirror): AVLNode(key,type,x,y, nullptr){
-        mirror = mirror;
+        this->mirror = mirror;
     }
 };
 
@@ -86,15 +93,17 @@ struct WallNode: public AVLNode{
     }
 };
 
-
 struct Maze {
     AVLTree<WallNode> *row_tree;
     AVLTree<WallNode> *col_tree;
+    
+    
+    
     Maze() : row_tree(nullptr),col_tree(nullptr){};
     
     bool add_mirror(int type, int x, int y);
-    WallNode* get_wall_node(Mirror *m, AVLTree<WallNode>* wall_tree, int key, int key_c);
-    AVLTree<MirrorNode>* get_mirror_tree(Mirror *m, WallNode* w_node, int key, int key_c);
+    WallNode* get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y);
+    AVLTree<MirrorNode>* get_mirror_tree(WallNode* w_node);
     bool make_connections(Mirror* m, int key, int key_c, WallNode* w_node, AVLTree<MirrorNode>* m_tree);
     //MirrorNode* get_mirror_node(Mirror *m, WallNode* w_node, int key, int key_c);
     

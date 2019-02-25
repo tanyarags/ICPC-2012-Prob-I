@@ -15,11 +15,11 @@ bool Maze::add_mirror(int type, int x, int y){
     //create a mirror
     Mirror* m = new Mirror(type,x,y);//new mirror
     
-    WallNode *w_node_x = get_wall_node(m, row_tree, key_x, key_y);
-    WallNode *w_node_y = get_wall_node(m, col_tree, key_y, key_x);
+    WallNode *w_node_x = get_wall_node(row_tree, x, 0);
+    WallNode *w_node_y = get_wall_node(col_tree, 0, y);
     
-    AVLTree<MirrorNode> *m_tree_x = get_mirror_tree(m, w_node_x, key_x, key_y);
-    AVLTree<MirrorNode> *m_tree_y = get_mirror_tree(m, w_node_y, key_y, key_x);
+    AVLTree<MirrorNode> *m_tree_x = get_mirror_tree(w_node_x);
+    AVLTree<MirrorNode> *m_tree_y = get_mirror_tree(w_node_y);
     
     make_connections(m, key_x, key_y, w_node_x, m_tree_x);
     make_connections(m, key_y, key_x, w_node_y, m_tree_y);
@@ -39,29 +39,22 @@ bool Maze::make_connections(Mirror* m, int key, int key_c, WallNode* w_node, AVL
     MirrorNode *more_node = m_tree->search_more(key_c);
     
     //connect the node just less than curr node//
-    if (less_node != nullptr){
-        less_node->mirror->add_neighbor((Base*)(m_node->mirror));
+    if (less_node != nullptr)
         m_node->mirror->add_neighbor((Base*)(less_node->mirror));
-    }
-    else{//add wall point as neighbor
-        w_node->wallpoint->add_neighbor((Base*)m_node);
+    
+    else
         m_node->mirror->add_neighbor((Base*)(w_node->wallpoint));
-        
-    }
     
     //connect the node just more than curr node//
-    if (more_node != nullptr){
-        more_node->mirror->add_neighbor((Base*)(m_node->mirror));
+    if (more_node != nullptr)
         m_node->mirror->add_neighbor((Base*)(more_node->mirror));
-    }
     
     return true;
 }
-WallNode* Maze::get_wall_node(Mirror *m, AVLTree<WallNode>* wall_tree, int key, int key_c){
-    int x= m->x, y = m->y;
-    
+WallNode* Maze::get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y){
+    int key = x > 0 ? x : y;
     if (wall_tree == nullptr)//now wall added, add new
-        row_tree = new AVLTree<WallNode>;
+        wall_tree = new AVLTree<WallNode>;
 
     //get wall node pointer for this mirror (from Wall Tree)
     WallNode* w_node = wall_tree->search(key);
@@ -74,7 +67,7 @@ WallNode* Maze::get_wall_node(Mirror *m, AVLTree<WallNode>* wall_tree, int key, 
     return w_node;
 }
 
-AVLTree<MirrorNode>* Maze::get_mirror_tree(Mirror *m, WallNode* w_node, int key, int key_c){
+AVLTree<MirrorNode>* Maze::get_mirror_tree(WallNode* w_node){
     //int x= m->x, y = m->y, type = m->type;
     //get mirror tree pointer for this mirror (from wallNode)
     AVLTree<MirrorNode>* mirror_tree = w_node->mirror_tree;

@@ -20,15 +20,19 @@ int main(int argc, const char * argv[]) {
     int r, c, m, n;
     cin >> r >> c >> m >> n;
     
+    Maze maze;
+    
     int tmp_x = -1, tmp_y= -1;
     for (int iter = 0; iter < m; iter++)
     {
         cin >> tmp_x >> tmp_y;
+        maze.add_mirror(-1, tmp_x, tmp_y);
     }
     
     for (int iter = 0; iter < n; iter++)
     {
         cin >> tmp_x >> tmp_y;
+        maze.add_mirror(1, tmp_x, tmp_y);
     }
     
     
