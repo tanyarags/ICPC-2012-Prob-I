@@ -25,11 +25,11 @@ bool Mirror::add_neighbor(Base* neighbor){
         //changed for neighbor
         if( neighbor->type ==0){//Wall point
             ((WallPoint*)neighbor)->closest_mirror = (Base*)this;
-            cout << "\nClosest Mirror updated " << ((WallPoint*)neighbor)->x << " " << ((WallPoint*)neighbor)->y;
+            //cout << "\nClosest Mirror updated " << ((WallPoint*)neighbor)->x << " " << ((WallPoint*)neighbor)->y;
         }
         else{
             ((Mirror*)neighbor)->directions[direction] = (Base*)this;
-            cout << "\nMirror neighbor updated " << ((Mirror*)neighbor)->x << " " << ((Mirror*)neighbor)->y;
+            //cout << "\nMirror neighbor updated " << ((Mirror*)neighbor)->x << " " << ((Mirror*)neighbor)->y;
         }
     }
     return true;
@@ -56,7 +56,7 @@ bool Maze::add_mirror(int type, int x, int y){
     int key_x = x;
     int key_y = y;
     
-    cout << "\nMaking connections for " << x << " " <<y;
+    ////cout << "\nMaking connections for " << x << " " <<y;
     //create a mirror
     Mirror* m = new Mirror(type,x,y);//new mirror
     
@@ -113,7 +113,7 @@ WallNode* Maze::get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y){
         w_node = wall_tree->insert(key, w_node);
     }
     
-    cout << "\nFetched Wall " << ((Base*)w_node)->x << " " << ((Base*)w_node)->y;
+    //cout << "\nFetched Wall " << ((Base*)w_node)->x << " " << ((Base*)w_node)->y;
     return w_node;
 }
 

@@ -72,6 +72,18 @@ void Path::print_path(){
     print_tree(ver_root->root);
 }
 
+bool Path::check_end_point(int x, int y){
+//checking only in horizontal tree
+    PathNode* node = hor_root->search(x);
+    while(node!= nullptr){
+        if (node->point1->y == y || node->point2->y == y)
+            return true;
+        
+        node = (PathNode*)(hor_root->next(node));
+    }
+    return false;
+}
+
 std::list<Point> Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree){
     std::list<Point> intersection_points;
     //important that horizontal tree is different from vertical tree
@@ -116,7 +128,7 @@ std::list<Point> Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTr
                     
                     Point intersection_p = check_intersect(end_ptr->pathnode, ver_node);
                     if (intersection_p.x != -1){
-                        cout<<"\nPoint found " << intersection_p.x << " " << intersection_p.y;
+                        //cout<<"\nPoint found " << intersection_p.x << " " << intersection_p.y;
                         intersection_points.push_back(intersection_p);
                     }
                     
@@ -244,7 +256,7 @@ Path* Traversal::traverse(Base* node, int direction){
             x2 = node->x;
             y2 = node->y;
         }
-        cout<<"\nLine Segment from (" <<x1 << "," << y1<< ") ("<<x2 << "," << y2 << ")";
+        //cout<<"\nLine Segment from (" <<x1 << "," << y1<< ") ("<<x2 << "," << y2 << ")";
         
         path->push(x1, y1, x2, y2);
     }

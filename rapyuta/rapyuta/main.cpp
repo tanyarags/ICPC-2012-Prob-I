@@ -18,6 +18,7 @@ int main(int argc, const char * argv[]) {
     
     ifstream in("input.txt");
     cin.rdbuf(in.rdbuf()); //redirect
+    
     int r, c, m, n;
     cin >> r >> c >> m >> n;
     
@@ -41,15 +42,20 @@ int main(int argc, const char * argv[]) {
     Traversal trace = Traversal(mazeptr);
     
     Path* path1 = trace.traverse_start();
-    Path* path2 = trace.traverse_end();
+    
+    
+    if (!path1->check_end_point(c+1, r)){
+        Path* path2 = trace.traverse_end();
 
-//    path1->print_path();
-//    path2->print_path();
-//
-    std::list<Point> l = trace.find_intersection(path1, path2);
-    
-    Point near = l.front();
-    cout << "\n"<< l.size() << " " << near.y << " " << near.x;
-    
+        std::list<Point> l = trace.find_intersection(path1, path2);
+        if (l.size() == 0)
+            cout<< "\nimpossible";
+        else{
+            Point near = l.front();
+            cout << "\n"<< l.size() << " " << near.y << " " << near.x;
+        }
+    }
+    else
+        cout << "0";
     return 0;
 }
