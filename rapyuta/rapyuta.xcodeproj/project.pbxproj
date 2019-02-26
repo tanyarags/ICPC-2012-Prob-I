@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2B096788222328A10052139C /* maze.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B096786222328A10052139C /* maze.cpp */; };
 		2B09678B222382670052139C /* avl_tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B096789222382670052139C /* avl_tree.cpp */; };
+		2B09678E2225B4240052139C /* traverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B09678C2225B4240052139C /* traverse.cpp */; };
 		2BC7231522230B6900D17816 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BC7231422230B6900D17816 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,8 @@
 		2B096787222328A10052139C /* maze.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = maze.hpp; sourceTree = "<group>"; };
 		2B096789222382670052139C /* avl_tree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = avl_tree.cpp; sourceTree = "<group>"; };
 		2B09678A222382670052139C /* avl_tree.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = avl_tree.hpp; sourceTree = "<group>"; };
+		2B09678C2225B4240052139C /* traverse.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = traverse.cpp; sourceTree = "<group>"; };
+		2B09678D2225B4240052139C /* traverse.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = traverse.hpp; sourceTree = "<group>"; };
 		2BC7231122230B6900D17816 /* rapyuta */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rapyuta; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC7231422230B6900D17816 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -68,6 +71,8 @@
 				2B096787222328A10052139C /* maze.hpp */,
 				2B096789222382670052139C /* avl_tree.cpp */,
 				2B09678A222382670052139C /* avl_tree.hpp */,
+				2B09678C2225B4240052139C /* traverse.cpp */,
+				2B09678D2225B4240052139C /* traverse.hpp */,
 			);
 			path = rapyuta;
 			sourceTree = "<group>";
@@ -129,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BC7231522230B6900D17816 /* main.cpp in Sources */,
+				2B09678E2225B4240052139C /* traverse.cpp in Sources */,
 				2B096788222328A10052139C /* maze.cpp in Sources */,
 				2B09678B222382670052139C /* avl_tree.cpp in Sources */,
 			);

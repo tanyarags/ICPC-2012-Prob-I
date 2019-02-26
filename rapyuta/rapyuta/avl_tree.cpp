@@ -7,6 +7,31 @@
 //
 
 #include "avl_tree.hpp"
+
+//AVLNode* AVLNode::leftmost(){
+//    if (left == nullptr)
+//        return this;
+//    else
+//        return left->leftmost();
+//}
+//
+//AVLNode* AVLNode::rightmost(){
+//    if (right == nullptr)
+//        return this;
+//    else
+//        return right->rightmost();
+//}
+//
+//AVLNode* AVLNode::next(){
+//     if (right != nullptr)
+//        return right->leftmost();
+//    
+//    if (parent != nullptr)
+//        return parent;
+//    
+//    return nullptr; //no next point
+//}
+
 template <class T>
 T* AVLTree<T>::search(int key, T *start_node){
     

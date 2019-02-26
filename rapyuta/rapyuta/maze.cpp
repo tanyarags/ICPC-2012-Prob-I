@@ -8,36 +8,6 @@
 
 #include "maze.hpp"
 
-///Path Functions//
-bool Path::push(int x1, int y1, int x2, int y2){
-    if (y1 == y2){ //horizonal
-        int key = y1;
-        PathNode* node = new PathNode(key, x1, y1, x2, y2, nullptr);
-        hor_root->insert(key, node);
-        len_hor = len_hor + 1;
-    }
-    
-    if (x1 == x2){ //vertical
-        int key = x1;
-        PathNode* node = new PathNode(key, x1, y1, x2, y2, nullptr);
-        ver_root->insert(key, node);
-        len_ver = len_ver + 1;
-    }
-    return true;
-}
-void Path::print_tree(PathNode* node ){
-    if (node != nullptr) {
-        print_tree(node->left);
-        node->print();
-        print_tree(node->right);
-    }
-}
-
-void Path::print_path(){
-    print_tree(hor_root->root);
-    print_tree(ver_root->root);
-}
-
 ///Mirror functions////
 bool Mirror::add_neighbor(Base* neighbor){
     int direction = get_direction(neighbor);
@@ -144,9 +114,6 @@ WallNode* Maze::get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y){
     }
     
     cout << "\nFetched Wall " << ((Base*)w_node)->x << " " << ((Base*)w_node)->y;
-    //cout << "Current wall tree\n";
-    //wall_tree->printPoints();
-
     return w_node;
 }
 
@@ -160,83 +127,4 @@ AVLTree<MirrorNode>* Maze::get_mirror_tree(WallNode* w_node){
     return mirror_tree;
 }
 
-int Maze::emerging_direction(Base* node, int in_direction){
-    int type = node->type;
-    int return_dir = -1;
-    
-    if (type ==0){
-        int x = node->x, pos_direction;
-        int y = node->y;
-        
-        if (x == 0) pos_direction = 1; //vertical wall node
-        else if (y == 0) pos_direction = 2; //horizontal wall node
-        else if (x == (cols + 1)) pos_direction = 3;
-        else if (y == (rows + 1)) pos_direction = 0;
-        else pos_direction = -1;
-        
-        if (in_direction == pos_direction) return_dir = in_direction;
-    }
-    
-    else if(type == -1){//case '/'
-        int map[4] = {1,0, 3, 2};
-        return_dir = map[in_direction];
-    }
-    
-    else if (type == 1){//case '\'
-        int map[4] = {3, 2, 1, 0};
-        return_dir = map[in_direction];
-    }
-    
-    return return_dir;
-}
 
-Base* Maze::next_node(Base* node, int emerge_direction){
-    if (node != nullptr){
-        int type = node->type;
-        
-        if (emerge_direction != -1){
-            if (type == 0)
-                return ((WallPoint*)node)->closest_mirror;
-            else
-                return ((Mirror*)node)->directions[emerge_direction];
-        }
-    }
-    return nullptr;
-}
-
-Path* Maze::traverse(Base* node, int direction){
-    Path* path = new Path();
-    
-    while(node != nullptr){
-        int x1=node->x, y1 = node->y;
-        int x2 = x1, y2 = y1;
-        direction = emerging_direction(node, direction);
-        
-        node = next_node(node, direction);
-        
-        if (node == nullptr){
-            switch (direction) {
-                case 0: y2 = 0;
-                    break;
-                case 1: x2 = cols + 1;
-                    break;
-                case 2: y2 = rows + 1;
-                    break;
-                case 3: x2 = 0;
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        else{
-            x2 = node->x;
-            y2 = node->y;
-        }
-        cout<< "Line Segment from (" <<x1 << "," << y1<< ") ("<<x2 << "," << y2 << ")";
-        
-        path->push(x1, y1, x2, y2);
-    }
-    
-    return path;
-}

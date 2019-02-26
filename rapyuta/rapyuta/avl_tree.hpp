@@ -13,26 +13,26 @@
 #include <iostream>
 using namespace std;
 
-struct Base{
-    int type;
-    int x;
-    int y;
-    Base(int type, int x, int y): type(type), x(x), y(y){}
-};
 
-struct AVLNode: public Base {
+struct AVLNode{
     int key;
     int balance;
     AVLNode *left, *right, *parent;
     
-    AVLNode(int k, int type, int x, int y, AVLNode *p) : Base(type,x,y), key(k), balance(0), parent(p),
+    AVLNode(int k, AVLNode *p) : key(k), balance(0), parent(p),
     left(nullptr), right(nullptr){}
     
     ~AVLNode() {
         delete left;
         delete right;
     }
+    
+//    AVLNode* leftmost();
+//    AVLNode* rightmost();
+//    AVLNode* next();
+    
 };
+
 
 template <class T>
 struct AVLTree {

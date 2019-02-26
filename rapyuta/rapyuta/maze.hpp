@@ -12,43 +12,16 @@
 #include <stdio.h>
 #include "avl_tree.cpp"
 
-struct LineSegment{
-    int x1, x2, y1, y2;
-    LineSegment(int x1, int y1, int x2, int y2): x1(x1), y1(y1), x2(x2), y2(y2){};
-    void print(){
-        cout<< "\nPoint1 (" << x1 << "," << y1 << ") Point2 (" << x2 << ","<<y2 << ")";
-    }
+struct Base{
+    int type;
+    int x;
+    int y;
+    Base(int type, int x, int y): type(type), x(x), y(y){}
 };
 
-struct PathNode: public LineSegment{
-    int key;
-    int balance;
-    
-    PathNode *left, *right, *parent;
-    
-    PathNode(int k, int x1, int y1, int x2, int y2, PathNode* p): LineSegment(x1, y1, x2, y2), key(k), balance(0), parent(p),
-    left(nullptr), right(nullptr){};
-    
-    ~PathNode() {
-        delete left;
-        delete right;
-    }
-};
-
-struct Path{
-    AVLTree<PathNode> *hor_root;
-    AVLTree<PathNode> *ver_root;
-    int len_hor, len_ver;
-    
-    Path():hor_root(nullptr), ver_root(nullptr), len_hor(0), len_ver(0){
-        hor_root = new AVLTree<PathNode>();
-        ver_root = new AVLTree<PathNode>();
-    };
-    
-    bool push(int x1, int y1, int x2, int y2);
-    void print_path();
-    void print_tree(PathNode* node);
-    
+struct GridNode: public Base, public AVLNode {
+    GridNode(int k, int type, int x, int y, GridNode *p) : Base(type,x,y), AVLNode(k,(AVLNode*)p){}
+    ~GridNode() {}
 };
 
 struct WallPoint: public Base{
@@ -75,19 +48,19 @@ struct Mirror: public Base{
     int get_direction(Base* node);
 };
 
-struct MirrorNode: public AVLNode{
+struct MirrorNode: public GridNode{
     Mirror *mirror;
     
-    MirrorNode(int key, int type, int x, int y, Mirror *mirror): AVLNode(key,type,x,y, nullptr){
+    MirrorNode(int key, int type, int x, int y, Mirror *mirror): GridNode(key,type,x,y, nullptr){
         this->mirror = mirror;
     }
 };
 
-struct WallNode: public AVLNode{
+struct WallNode: public GridNode{
     WallPoint *wallpoint;
     AVLTree<MirrorNode> *mirror_tree;
     
-    WallNode(int key, int type, int x, int y): AVLNode(key,type,x,y, nullptr){
+    WallNode(int key, int type, int x, int y): GridNode(key,type,x,y, nullptr){
         wallpoint = new WallPoint(type, x, y);
         mirror_tree = nullptr;
     }
@@ -122,17 +95,8 @@ struct Maze {
     WallNode* get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y);
     AVLTree<MirrorNode>* get_mirror_tree(WallNode* w_node);
     bool make_connections(Mirror* m, int key, int key_c, WallNode* w_node, AVLTree<MirrorNode>* m_tree);
-    Path* traverse(Base* node, int direction);
-    Base* next_node(Base* node, int direction);
-    int emerging_direction(Base* node, int in_direction);
     bool make_connection_last_layer(Mirror* m, int key, int key_c, WallNode* w_node);
     
-    Path* traverse_start(){
-        return traverse((Base*)(start_node->wallpoint), 1);
-    }
     
-    Path* traverse_end(){
-        return traverse((Base*)(end_node->wallpoint), 3);
-    }
 };
 #endif /* maze_hpp */

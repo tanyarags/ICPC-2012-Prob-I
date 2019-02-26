@@ -36,11 +36,11 @@ int main(int argc, const char * argv[]) {
         maze.add_mirror(1, tmp_x, tmp_y);
     }
     
-    Path* path1 = maze.traverse_start();
-    Path* path2 = maze.traverse_end();
-    
-    path1->print_path();
-    path2->print_path();
+//    Path* path1 = maze.traverse_start();
+//    Path* path2 = maze.traverse_end();
+//    
+//    path1->print_path();
+//    path2->print_path();
     
     
     return 0;
