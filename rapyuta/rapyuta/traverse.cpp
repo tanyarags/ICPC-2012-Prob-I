@@ -45,14 +45,14 @@ Point LineSegment::check_intersect(LineSegment* seg){
 
 bool Path::push(int x1, int y1, int x2, int y2){
     if (y1 == y2){ //horizonal
-        int key = x1;//y1 //TODO: make it flexible
+        int key = x1< x2 ? x1 : x2 ;//y1 //TODO: make it flexible
         PathNode* node = new PathNode(key, len_hor, x1, y1, x2, y2, nullptr);
         hor_root->insert(key, node);
         len_hor = len_hor + 1;
     }
     
     if (x1 == x2){ //vertical
-        int key = x1;
+        int key = x1< x2 ? x1 : x2 ;
         PathNode* node = new PathNode(key, len_ver, x1, y1, x2, y2, nullptr);
         ver_root->insert(key, node);
         len_ver = len_ver + 1;
@@ -61,9 +61,9 @@ bool Path::push(int x1, int y1, int x2, int y2){
 }
 void Path::print_tree(PathNode* node ){
     if (node != nullptr) {
-        print_tree(node->left);
+        print_tree((PathNode*)node->left);
         node->print();
-        print_tree(node->right);
+        print_tree((PathNode*)node->right);
     }
 }
 
@@ -72,7 +72,7 @@ void Path::print_path(){
     print_tree(ver_root->root);
 }
 
-void Path::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree){
+void Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree){
     std::list<Point> intersection_points;
     //important that horizontal tree is different from vertical tree
 
@@ -106,40 +106,45 @@ void Path::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver
         //vertical node where index_x found
         PathNode* ver_node = ver_tree->search(index_x);
         
-        end_ptr = touched_nodes;
-        
-        while( ver_node->key == index_x){
+        if ( ver_node != nullptr)
+        {
             end_ptr = touched_nodes;
-            while(end_ptr != nullptr){
-                
-                Point intersection_p = check_intersect(end_ptr->pathnode, ver_node);
-                if (intersection_p.x != -1)
-                    cout<<"Point found";
-                
-                //perform seiving
-                if( !valid_segment((LineSegment*)end_ptr, index_x)){
+            
+            while( ver_node->key == index_x){
+                end_ptr = touched_nodes;
+                while(end_ptr != nullptr){
                     
-                    if(end_ptr == touched_nodes) //start pointer
-                        touched_nodes = end_ptr->next;
+                    Point intersection_p = check_intersect(end_ptr->pathnode, ver_node);
+                    if (intersection_p.x != -1)
+                        cout<<"\nPoint found " << intersection_p.x << " " << intersection_p.y;
                     
-                    PathNodeList* tmp_ptr = end_ptr;
-                    end_ptr = end_ptr->next;
-                    delete tmp_ptr;
+                    //perform seiving
+                    if( !valid_segment((LineSegment*)end_ptr, index_x)){
+                        
+                        if(end_ptr == touched_nodes) //start pointer
+                            touched_nodes = end_ptr->next;
+                        
+                        PathNodeList* tmp_ptr = end_ptr;
+                        end_ptr = end_ptr->next;
+                        delete tmp_ptr;
+                    }
                 }
+                ver_node = (PathNode*)(ver_tree->next(ver_node)); //iter++
             }
-            ver_node = (PathNode*)(ver_tree->next(ver_node)); //iter++
+            
+            index_x = index_x +1;
         }
     }
     //return intersection_points;
 }
 
-bool Path::valid_segment(LineSegment* seg, int indx){
+bool Traversal::valid_segment(LineSegment* seg, int indx){
     if(seg->point1->x < indx && seg->point2->x < indx)
         return true;
     return false;
 }
 
-Point Path::check_intersect(PathNode* node1, PathNode* node2){
+Point Traversal::check_intersect(PathNode* node1, PathNode* node2){
     Point ip(-1,-1);
     
     ip = ((LineSegment*)node1)->check_intersect(((LineSegment*)node1));
@@ -148,9 +153,10 @@ Point Path::check_intersect(PathNode* node1, PathNode* node2){
 }
 
 void Traversal::find_intersection(Path* path1, Path * path2){
-        //to be written
-}
+    find_intersection(path1->hor_root, path2->ver_root);
+//    find_intersection(path2->hor_root, path1->ver_root);
 
+}
 
 int Traversal::emerging_direction(Base* node, int in_direction){
     int type = node->type;
@@ -225,7 +231,7 @@ Path* Traversal::traverse(Base* node, int direction){
             x2 = node->x;
             y2 = node->y;
         }
-        cout<< "Line Segment from (" <<x1 << "," << y1<< ") ("<<x2 << "," << y2 << ")";
+        cout<<"\nLine Segment from (" <<x1 << "," << y1<< ") ("<<x2 << "," << y2 << ")";
         
         path->push(x1, y1, x2, y2);
     }

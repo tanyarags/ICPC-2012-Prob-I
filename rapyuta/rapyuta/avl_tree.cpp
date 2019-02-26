@@ -20,7 +20,7 @@ T* AVLTree<T>::leftmost(T* n){
         if(n->left == nullptr)
             return n;
         else
-            return leftmost(n->left);
+            return leftmost((T*)n->left);
         
     }
 }
@@ -37,7 +37,7 @@ T* AVLTree<T>::rightmost(T* n){
         if(n->right == nullptr)
             return n;
         else
-            return rightmost(n->right);
+            return rightmost((T*)n->right);
         
     }
 }
@@ -48,9 +48,9 @@ T* AVLTree<T>::next(T* n){
         return nullptr;
     else{
         if(n->right != nullptr)
-            return rightmost(n->right);
+            return rightmost((T*)n->right);
         if(n->parent != nullptr)
-            return n->parent;
+            return (T*)n->parent;
     }
     
     return nullptr;

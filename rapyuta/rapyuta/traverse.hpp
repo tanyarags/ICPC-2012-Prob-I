@@ -40,12 +40,7 @@ struct LineSegment{
 };
 
 struct PathNode: public LineSegment, public AVLNode{
-    int key;
-    int balance;
-    
-    PathNode *left, *right, *parent;
-    
-    PathNode(int k, int node_id, int x1, int y1, int x2, int y2, PathNode* p): LineSegment(node_id, x1, y1, x2, y2), AVLNode(k, (AVLNode*)p){};
+    PathNode(int k, int node_id, int x1, int y1, int x2, int y2, PathNode *p): LineSegment(node_id, x1, y1, x2, y2), AVLNode(k, (AVLNode*)p){};
     
     ~PathNode() {}
 };
@@ -69,20 +64,21 @@ struct Path{
     bool push(int x1, int y1, int x2, int y2);
     void print_path();
     void print_tree(PathNode* node);
-    void find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree);
-    Point check_intersect(PathNode* node1, PathNode* node2);
-    bool valid_segment(LineSegment* seg, int indx);
+    
 };
 
 struct  Traversal {
     Maze* maze;
     
-    Traversal(Maze* maze){}
+    Traversal(Maze* maze): maze(maze){}
     
     Base* next_node(Base* node, int direction);
     int emerging_direction(Base* node, int in_direction);
     
     void find_intersection(Path* path1, Path * path2);
+    void find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree);
+    Point check_intersect(PathNode* node1, PathNode* node2);
+    bool valid_segment(LineSegment* seg, int indx);
     
     Path* traverse(Base* node, int direction);
     Path* traverse_start(){
@@ -93,7 +89,6 @@ struct  Traversal {
         return traverse((Base*)(maze->end_node->wallpoint), 3);
     }
     
-    void find_intersection(AVLTree<PathNode> *root1, AVLTree<PathNode> *root2);
 };
 
 #endif /* traverse_hpp */

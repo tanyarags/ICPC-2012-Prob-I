@@ -10,6 +10,7 @@
 #include <fstream>
 
 #include "maze.hpp"
+#include "traverse.hpp"
 
 using namespace std;
 
@@ -36,12 +37,16 @@ int main(int argc, const char * argv[]) {
         maze.add_mirror(1, tmp_x, tmp_y);
     }
     
-//    Path* path1 = maze.traverse_start();
-//    Path* path2 = maze.traverse_end();
-//    
-//    path1->print_path();
-//    path2->print_path();
+    Maze* mazeptr = &maze;
+    Traversal trace = Traversal(mazeptr);
     
+    Path* path1 = trace.traverse_start();
+    Path* path2 = trace.traverse_end();
+
+    path1->print_path();
+    path2->print_path();
+    
+    trace.find_intersection(path1, path2);
     
     return 0;
 }
