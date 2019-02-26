@@ -32,6 +32,8 @@ struct LineSegment{
         delete point2;
     }
     
+    Point check_intersect(LineSegment* seg);
+    
     void print(){
         cout<< "\nPoint1 (" << point1->x << "," << point1->y << ") Point2 (" << point2->x << ","<<point1->y << ")";
     }
@@ -52,7 +54,6 @@ struct PathNodeList{
     PathNode* pathnode;
     PathNodeList* next;
     PathNodeList(PathNode* pathnode): pathnode(pathnode), next(nullptr){};
-    
 };
 
 struct Path{
@@ -68,8 +69,9 @@ struct Path{
     bool push(int x1, int y1, int x2, int y2);
     void print_path();
     void print_tree(PathNode* node);
-//    void find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree);
-    
+    void find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree);
+    Point check_intersect(PathNode* node1, PathNode* node2);
+    bool valid_segment(LineSegment* seg, int indx);
 };
 
 struct  Traversal {

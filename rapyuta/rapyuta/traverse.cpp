@@ -9,6 +9,40 @@
 #include "traverse.hpp"
 ///Path Functions//
 
+Point LineSegment::check_intersect(LineSegment* seg){
+    Point ip(-1,-1);
+    
+    if((point1->x == point2->x) && (seg->point1->x == seg->point2->x))
+        return ip;
+    
+    if((point1->y == point2->y) && (seg->point1->y == seg->point2->y))
+        return ip;
+    
+    if(point1->x == point2->x){ // vertical line segment
+        if( seg->point1->x > point1->x && seg->point1->x < point1->x){
+            ip.x = point1->x;
+            ip.y = seg->point1->y;
+        }
+        if( seg->point1->x < point1->x && seg->point1->x > point1->x){
+            ip.x = point1->x;
+            ip.y = seg->point1->y;
+        }
+    }
+    
+    if(point1->y == point2->y){ // horizontal point
+        if( seg->point1->y > point1->y && seg->point1->y < point1->y){
+            ip.x = seg->point1->x;
+            ip.y = point1->y;
+        }
+        if( seg->point1->y < point1->y && seg->point1->y > point1->y){
+            ip.x = seg->point1->x;
+            ip.y = point1->y;
+        }
+    }
+    
+    return ip;
+}
+
 bool Path::push(int x1, int y1, int x2, int y2){
     if (y1 == y2){ //horizonal
         int key = x1;//y1 //TODO: make it flexible
@@ -38,45 +72,80 @@ void Path::print_path(){
     print_tree(ver_root->root);
 }
 
-//void Path::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree){
-//    std::list<Point> intersection_points;
-//    //important that horizontal tree is different from vertical tree
-//
-//    int index_x = 1;
-//    PathNodeList* touched_nodes = nullptr;
-//    PathNodeList* adding_ptr = nullptr ;
-//
-//
-//    PathNode* node =  (PathNode*)(hor_tree->root->leftmost()); //startnode
-//
-//    //init index_x: to avoid starting from 1
-//    index_x = node->key;
-//
-//    while(node != nullptr){
-//        //add nodes with index_x to list
-//        while( node->key == index_x){
-//
-//            PathNodeList* new_node = new PathNodeList(node);
-//            if (touched_nodes == nullptr){
-//                touched_nodes = new_node;
-//                adding_ptr = touched_nodes;
-//            }
-//
-//            else{
-//                adding_ptr->next = new_node;
-//                adding_ptr = new_node;
-//            }
-//            node = (PathNode*)(node->next());
-//        }
-//
-//
-//        //ver_tree->search(index_x);
-//        //remove if line ended
-//
-//    }
-//    
-//    //return intersection_points;
-//}
+void Path::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree){
+    std::list<Point> intersection_points;
+    //important that horizontal tree is different from vertical tree
+
+    int index_x = 1;
+    PathNodeList* touched_nodes = nullptr;
+    PathNodeList* end_ptr = nullptr ;
+
+
+    PathNode* node =  (PathNode*)(hor_tree->leftmost(hor_tree->root)); //startnode
+
+    //init index_x: to avoid starting from 1
+    index_x = node->key;
+
+    while(node != nullptr){
+        //add nodes with index_x to list
+        while( node->key == index_x){
+
+            PathNodeList* new_node = new PathNodeList(node);
+            if (touched_nodes == nullptr){
+                touched_nodes = new_node;
+                end_ptr = touched_nodes;
+            }
+
+            else{
+                end_ptr->next = new_node;
+                end_ptr = new_node;
+            }
+            node = (PathNode*)(hor_tree->next(node));
+        }
+
+        //vertical node where index_x found
+        PathNode* ver_node = ver_tree->search(index_x);
+        
+        end_ptr = touched_nodes;
+        
+        while( ver_node->key == index_x){
+            end_ptr = touched_nodes;
+            while(end_ptr != nullptr){
+                
+                Point intersection_p = check_intersect(end_ptr->pathnode, ver_node);
+                if (intersection_p.x != -1)
+                    cout<<"Point found";
+                
+                //perform seiving
+                if( !valid_segment((LineSegment*)end_ptr, index_x)){
+                    
+                    if(end_ptr == touched_nodes) //start pointer
+                        touched_nodes = end_ptr->next;
+                    
+                    PathNodeList* tmp_ptr = end_ptr;
+                    end_ptr = end_ptr->next;
+                    delete tmp_ptr;
+                }
+            }
+            ver_node = (PathNode*)(ver_tree->next(ver_node)); //iter++
+        }
+    }
+    //return intersection_points;
+}
+
+bool Path::valid_segment(LineSegment* seg, int indx){
+    if(seg->point1->x < indx && seg->point2->x < indx)
+        return true;
+    return false;
+}
+
+Point Path::check_intersect(PathNode* node1, PathNode* node2){
+    Point ip(-1,-1);
+    
+    ip = ((LineSegment*)node1)->check_intersect(((LineSegment*)node1));
+    
+    return ip;
+}
 
 void Traversal::find_intersection(Path* path1, Path * path2){
         //to be written
