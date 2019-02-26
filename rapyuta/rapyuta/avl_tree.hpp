@@ -26,11 +26,6 @@ struct AVLNode{
         delete left;
         delete right;
     }
-    
-//    AVLNode* leftmost();
-//    AVLNode* rightmost();
-//    AVLNode* next();
-    
 };
 
 
@@ -57,6 +52,9 @@ struct AVLTree {
     void printBalance               ( T *n );
 //    void printPoints                ( T *n );
     void clearNode                  ( T *n );
+    T* leftmost                     ( T *n );
+    T* rightmost                    ( T *n );
+    T* next                         ( T *n );
 };
 
 #endif /* avl_tree_hpp */

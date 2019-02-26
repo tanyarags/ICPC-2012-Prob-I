@@ -8,29 +8,54 @@
 
 #include "avl_tree.hpp"
 
-//AVLNode* AVLNode::leftmost(){
-//    if (left == nullptr)
-//        return this;
-//    else
-//        return left->leftmost();
-//}
-//
-//AVLNode* AVLNode::rightmost(){
-//    if (right == nullptr)
-//        return this;
-//    else
-//        return right->rightmost();
-//}
-//
-//AVLNode* AVLNode::next(){
-//     if (right != nullptr)
-//        return right->leftmost();
-//    
-//    if (parent != nullptr)
-//        return parent;
-//    
-//    return nullptr; //no next point
-//}
+template <class T>
+T* AVLTree<T>::leftmost(T* n){
+    if (n == nullptr)
+        n = root;
+    
+    if (n == nullptr)
+        return nullptr;
+    
+    else{
+        if(n->left == nullptr)
+            return n;
+        else
+            return leftmost(n->left);
+        
+    }
+}
+
+template <class T>
+T* AVLTree<T>::rightmost(T* n){
+    if (n == nullptr)
+        n = root;
+    
+    if (n == nullptr)
+        return nullptr;
+    
+    else{
+        if(n->right == nullptr)
+            return n;
+        else
+            return rightmost(n->right);
+        
+    }
+}
+
+template <class T>
+T* AVLTree<T>::next(T* n){
+    if( n == nullptr)
+        return nullptr;
+    else{
+        if(n->right != nullptr)
+            return rightmost(n->right);
+        if(n->parent != nullptr)
+            return n->parent;
+    }
+    
+    return nullptr;
+
+}
 
 template <class T>
 T* AVLTree<T>::search(int key, T *start_node){
