@@ -48,8 +48,8 @@ T* AVLTree<T>::next(T* n){
         return nullptr;
     else{
         if(n->right != nullptr)
-            return rightmost((T*)n->right);
-        if(n->parent != nullptr)
+            return leftmost((T*)n->right);
+        if(n->parent != nullptr && n->parent->key > n->key)
             return (T*)n->parent;
     }
     
