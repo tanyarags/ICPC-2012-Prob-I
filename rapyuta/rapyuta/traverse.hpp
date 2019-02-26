@@ -75,8 +75,8 @@ struct  Traversal {
     Base* next_node(Base* node, int direction);
     int emerging_direction(Base* node, int in_direction);
     
-    void find_intersection(Path* path1, Path * path2);
-    void find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree);
+    std::list<Point> find_intersection(Path* path1, Path * path2);
+    std::list<Point> find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree);
     Point check_intersect(PathNode* node1, PathNode* node2);
     bool valid_segment(LineSegment* seg, int indx);
     

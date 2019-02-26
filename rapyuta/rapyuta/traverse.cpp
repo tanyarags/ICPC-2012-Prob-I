@@ -72,7 +72,7 @@ void Path::print_path(){
     print_tree(ver_root->root);
 }
 
-void Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree){
+std::list<Point> Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode> *ver_tree){
     std::list<Point> intersection_points;
     //important that horizontal tree is different from vertical tree
 
@@ -115,8 +115,10 @@ void Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode>
                 while(end_ptr != nullptr){
                     
                     Point intersection_p = check_intersect(end_ptr->pathnode, ver_node);
-                    if (intersection_p.x != -1)
+                    if (intersection_p.x != -1){
                         cout<<"\nPoint found " << intersection_p.x << " " << intersection_p.y;
+                        intersection_points.push_back(intersection_p);
+                    }
                     
                     //perform seiving
                     if( !valid_segment((LineSegment*)end_ptr->pathnode, index_x)){
@@ -137,7 +139,7 @@ void Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTree<PathNode>
         
         index_x = index_x +1;
     }
-    //return intersection_points;
+    return intersection_points;
 }
 
 bool Traversal::valid_segment(LineSegment* seg, int indx){
@@ -154,9 +156,18 @@ Point Traversal::check_intersect(PathNode* node1, PathNode* node2){
     return ip;
 }
 
-void Traversal::find_intersection(Path* path1, Path * path2){
-    find_intersection(path1->hor_root, path2->ver_root);
-//    find_intersection(path2->hor_root, path1->ver_root);
+bool mycomparison (Point first, Point second)
+{ return ( int(first.x + first.y) <int(second.x + second.y) ); }
+
+
+std::list<Point> Traversal::find_intersection(Path* path1, Path * path2){
+    std::list<Point> l1 =  find_intersection(path1->hor_root, path2->ver_root);
+    std::list<Point> l2 = find_intersection(path2->hor_root, path1->ver_root);
+
+    l1.sort(mycomparison);
+    l2.sort(mycomparison);
+    l1.merge(l2, mycomparison);
+    return l1;
 
 }
 

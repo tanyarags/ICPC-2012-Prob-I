@@ -43,10 +43,13 @@ int main(int argc, const char * argv[]) {
     Path* path1 = trace.traverse_start();
     Path* path2 = trace.traverse_end();
 
-    path1->print_path();
-    path2->print_path();
+//    path1->print_path();
+//    path2->print_path();
+//
+    std::list<Point> l = trace.find_intersection(path1, path2);
     
-    trace.find_intersection(path1, path2);
+    Point near = l.front();
+    cout << "\n"<< l.size() << " " << near.y << " " << near.x;
     
     return 0;
 }
