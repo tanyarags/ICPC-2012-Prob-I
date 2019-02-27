@@ -41,9 +41,10 @@ int main(int argc, const char * argv[]) {
     Maze* mazeptr = &maze;
     Traversal trace = Traversal(mazeptr);
     
+    //get path from start point
     Path* path1 = trace.traverse_start();
     
-    
+    //check if 
     if (!path1->check_end_point(c+1, r)){
         Path* path2 = trace.traverse_end();
 

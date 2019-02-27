@@ -10,6 +10,8 @@
 ///Path Functions//
 
 Point LineSegment::check_intersect(LineSegment* seg){
+    //check if line segments intersect current
+    //return -1 if line segments not perpendicular or no intersection found 
     Point ip(-1,-1);
     
     if((point1->x == point2->x) && (seg->point1->x == seg->point2->x))
@@ -155,12 +157,14 @@ std::list<Point> Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTr
 }
 
 bool Traversal::valid_segment(LineSegment* seg, int indx){
+    //check if x point in between horizontal segment 
     if(seg->point1->x < indx && seg->point2->x < indx)
         return false;
     return true;
 }
 
 Point Traversal::check_intersect(PathNode* node1, PathNode* node2){
+    //check if line segments intersect
     Point ip(-1,-1);
     
     ip = ((LineSegment*)node1)->check_intersect(((LineSegment*)node2));
@@ -173,9 +177,11 @@ bool mycomparison (Point first, Point second)
 
 
 std::list<Point> Traversal::find_intersection(Path* path1, Path * path2){
+    //find intersection points for horizontal and vertical line segments for both paths
     std::list<Point> l1 =  find_intersection(path1->hor_root, path2->ver_root);
     std::list<Point> l2 = find_intersection(path2->hor_root, path1->ver_root);
 
+    //to give nearest node. use mycomparison to sort these
     l1.sort(mycomparison);
     l2.sort(mycomparison);
     l1.merge(l2, mycomparison);
@@ -184,6 +190,7 @@ std::list<Point> Traversal::find_intersection(Path* path1, Path * path2){
 }
 
 int Traversal::emerging_direction(Base* node, int in_direction){
+    //return emerging direction from node given incoming direction
     int type = node->type;
     int return_dir = -1;
     
@@ -193,20 +200,20 @@ int Traversal::emerging_direction(Base* node, int in_direction){
         
         if (x == 0) pos_direction = 1; //vertical wall node
         else if (y == 0) pos_direction = 2; //horizontal wall node
-        else if (x == (maze->cols + 1)) pos_direction = 3;
-        else if (y == (maze->rows + 1)) pos_direction = 0;
+        else if (x == (maze->cols + 1)) pos_direction = 3; //opposite end of vertical node
+        else if (y == (maze->rows + 1)) pos_direction = 0; //opposite end of horizontal node
         else pos_direction = -1;
         
         if (in_direction == pos_direction) return_dir = in_direction;
     }
     
     else if(type == -1){//case '/'
-        int map[4] = {1,0, 3, 2};
+        int map[4] = {1,0, 3, 2}; //reflection behavior of '/' mirror
         return_dir = map[in_direction];
     }
     
     else if (type == 1){//case '\'
-        int map[4] = {3, 2, 1, 0};
+        int map[4] = {3, 2, 1, 0};//reflection behavior of '\' mirror
         return_dir = map[in_direction];
     }
     
@@ -214,6 +221,7 @@ int Traversal::emerging_direction(Base* node, int in_direction){
 }
 
 Base* Traversal::next_node(Base* node, int emerge_direction){
+    //return next node in the emerging direction.
     if (node != nullptr){
         int type = node->type;
         

@@ -5,7 +5,13 @@
 //  Created by tanyarags on 26/02/19.
 //  Copyright © 2019 tanyarags. All rights reserved.
 //
+/*
+    Every path consists of line segments. Horizontal segments and vertical segments are maintained differently.
+    vertical line segments and horizontal line segments are maintained using AVLtrees for faster access.
 
+    Every Traversal is responsible for traversing the maze and finding intersection points.
+
+*/
 #ifndef traverse_hpp
 #define traverse_hpp
 

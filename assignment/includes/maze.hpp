@@ -6,6 +6,20 @@
 //  Copyright © 2019 tanyarags. All rights reserved.
 //
 
+/*
+Maze maintains 2 types of structures:
+1. WallNodes (columns) : avl tree
+2. Wallnodes (rows) : avl tree
+
+Each node in this tree maintains its WallID(wallpoint) and list of mirrors in that row/column.
+This list is maintained as an avl tree with each node containing mirror's attributes.
+
+Mirror's attributes:
+4 neighbours
+its position and type.
+
+*/
+
 #ifndef maze_hpp
 #define maze_hpp
 
