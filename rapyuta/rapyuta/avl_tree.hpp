@@ -22,10 +22,7 @@ struct AVLNode{
     AVLNode(int k, AVLNode *p) : key(k), balance(0), parent(p),
     left(nullptr), right(nullptr){}
     
-    ~AVLNode() {
-        delete left;
-        delete right;
-    }
+    ~AVLNode() {}
 };
 
 

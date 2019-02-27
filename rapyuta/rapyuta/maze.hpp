@@ -30,6 +30,8 @@ struct WallPoint: public Base{
     WallPoint(int type, int x, int y): Base(type,x,y){
         closest_mirror = nullptr;
     }
+    ~WallPoint(){}
+    
     bool add_neighbor(Base* neighbor){
         closest_mirror = neighbor;
         return true;
@@ -43,6 +45,11 @@ struct Mirror: public Base{
         for (int iter = 0; iter < 4; iter++)
             directions[iter] = nullptr;
     }
+    ~Mirror(){
+//        for (int iter = 0; iter < 4; iter++)
+//            if (directions[iter] != nullptr)
+//                delete directions[iter];
+    }
     
     bool add_neighbor(Base* neighbor);
     int get_direction(Base* node);
@@ -54,6 +61,7 @@ struct MirrorNode: public GridNode{
     MirrorNode(int key, int type, int x, int y, Mirror *mirror): GridNode(key,type,x,y, nullptr){
         this->mirror = mirror;
     }
+    ~MirrorNode(){}
 };
 
 struct WallNode: public GridNode{
@@ -63,6 +71,9 @@ struct WallNode: public GridNode{
     WallNode(int key, int type, int x, int y): GridNode(key,type,x,y, nullptr){
         wallpoint = new WallPoint(type, x, y);
         mirror_tree = nullptr;
+    }
+    ~WallNode(){
+       // delete wallpoint;
     }
     
     bool add_mirror_root( AVLTree<MirrorNode> * mirror_tree){
@@ -85,6 +96,11 @@ struct Maze {
         row_tree = new AVLTree<WallNode>();
         col_tree = new AVLTree<WallNode>();
     };
+    
+    ~Maze(){
+        delete row_tree;
+        delete col_tree;
+    }
     
     void init(){
         start_node = get_wall_node(col_tree, 0, 1 );

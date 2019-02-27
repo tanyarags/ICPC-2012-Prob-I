@@ -49,6 +49,10 @@ struct PathNodeList{
     PathNode* pathnode;
     PathNodeList* next;
     PathNodeList(PathNode* pathnode): pathnode(pathnode), next(nullptr){};
+    ~PathNodeList(){
+        delete pathnode;
+        delete next;
+    }
 };
 
 struct Path{
@@ -61,6 +65,11 @@ struct Path{
         ver_root = new AVLTree<PathNode>();
     };
     
+    ~Path(){
+        delete hor_root;
+        delete ver_root;
+    }
+    
     bool push(int x1, int y1, int x2, int y2);
     void print_path();
     void print_tree(PathNode* node);
@@ -71,6 +80,7 @@ struct  Traversal {
     Maze* maze;
     
     Traversal(Maze* maze): maze(maze){}
+    ~Traversal(){}
     
     Base* next_node(Base* node, int direction);
     int emerging_direction(Base* node, int in_direction);
