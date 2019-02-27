@@ -36,9 +36,9 @@ struct AVLTree {
     AVLTree();
     ~AVLTree(void);
     T* insert(int key, T* add_node);
-    T* search(int key, T *start_node = nullptr);
-    T* search_less(int key, T *start_node = nullptr);
-    T* search_more(int key, T *start_node = nullptr);
+    T* search(int key, T *start_node);
+    T* search_less(int key, T *start_node);
+    T* search_more(int key, T *start_node);
     void printBalance();
 //    void printPoints();
     
@@ -57,4 +57,5 @@ struct AVLTree {
     T* next                         ( T *n );
 };
 
+#include "avl_tree_impl.hpp"
 #endif /* avl_tree_hpp */

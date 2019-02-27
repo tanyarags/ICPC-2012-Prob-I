@@ -86,8 +86,8 @@ bool Maze::make_connections(Mirror* m, int key, int key_c, WallNode* w_node, AVL
     if (m_tree->root == nullptr)//no mirror exist along this
         m_node = m_tree->insert(key_c, m_node);
 
-    MirrorNode *less_node = m_tree->search_less(key_c);
-    MirrorNode *more_node = m_tree->search_more(key_c);
+    MirrorNode *less_node = m_tree->search_less(key_c, nullptr);
+    MirrorNode *more_node = m_tree->search_more(key_c, nullptr);
     
     //connect the node just less than curr node//
     if (less_node != nullptr)
@@ -106,7 +106,7 @@ WallNode* Maze::get_wall_node(AVLTree<WallNode>* wall_tree, int x, int y){
     int key = x + y;
 
     //get wall node pointer for this mirror (from Wall Tree)
-    WallNode* w_node = wall_tree->search(key);
+    WallNode* w_node = wall_tree->search(key, nullptr);
     if (w_node == nullptr){
         //wall node doesnt exist, add new
         w_node = new WallNode(key, 0, x, y);

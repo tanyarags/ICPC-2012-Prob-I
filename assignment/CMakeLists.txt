@@ -4,7 +4,6 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/includes )
 
 add_compile_options(-Wall -Wextra -Wpedantic)
 add_executable(Rapyuta 
-    src/avl_tree.cpp
     src/maze.cpp
     src/traverse.cpp
     src/main.cpp

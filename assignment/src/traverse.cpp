@@ -74,7 +74,7 @@ void Path::print_path(){
 
 bool Path::check_end_point(int x, int y){
 //checking only in horizontal tree
-    PathNode* node = hor_root->search(x);
+    PathNode* node = hor_root->search(x, nullptr);
     while(node!= nullptr){
         if (node->point1->y == y || node->point2->y == y)
             return true;
@@ -116,7 +116,7 @@ std::list<Point> Traversal::find_intersection(AVLTree<PathNode> *hor_tree, AVLTr
         }
 
         //vertical node where index_x found
-        PathNode* ver_node = ver_tree->search(index_x);
+        PathNode* ver_node = ver_tree->search(index_x, nullptr);
         
         if ( ver_node != nullptr)
         {
