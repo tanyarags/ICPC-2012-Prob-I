@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/includes )
 
 add_compile_options(-Wall -Wextra -Wpedantic)
-add_executable(Rapyuta 
+add_executable( solution 
     src/maze.cpp
     src/traverse.cpp
     src/main.cpp

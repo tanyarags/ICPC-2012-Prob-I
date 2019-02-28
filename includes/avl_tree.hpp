@@ -1,6 +1,6 @@
 //
 //  avl_tree.hpp
-//  rapyuta
+//  solution
 //
 //  Created by tanyarags on 25/02/19.
 //  Copyright © 2019 tanyarags. All rights reserved.
@@ -22,7 +22,10 @@ struct AVLNode{
     AVLNode(int k, AVLNode *p) : key(k), balance(0), parent(p),
     left(nullptr), right(nullptr){}
     
-    ~AVLNode() {}
+    ~AVLNode() {
+        delete left;
+        delete right;
+    }
 };
 
 
@@ -33,9 +36,9 @@ struct AVLTree {
     AVLTree();
     ~AVLTree(void);
     T* insert(int key, T* add_node);
-    T* search(int key, T *start_node = nullptr);
-    T* search_less(int key, T *start_node = nullptr);
-    T* search_more(int key, T *start_node = nullptr);
+    T* search(int key, T *start_node);
+    T* search_less(int key, T *start_node);
+    T* search_more(int key, T *start_node);
     void printBalance();
 //    void printPoints();
     
@@ -54,4 +57,5 @@ struct AVLTree {
     T* next                         ( T *n );
 };
 
+#include "avl_tree_impl.hpp"
 #endif /* avl_tree_hpp */

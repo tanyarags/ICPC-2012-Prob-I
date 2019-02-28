@@ -1,6 +1,6 @@
 //
 //  traverse.hpp
-//  rapyuta
+//  solution
 //
 //  Created by tanyarags on 26/02/19.
 //  Copyright © 2019 tanyarags. All rights reserved.
